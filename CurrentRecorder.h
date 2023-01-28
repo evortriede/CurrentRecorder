@@ -1,0 +1,39 @@
+#include <fsm.h>
+
+#include <GenericProtocol.h>
+
+#include "Arduino.h"
+#include "heltec.h"
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <WebServer.h>
+#include <Update.h>
+#include <nvs.h>
+
+WiFiServer telnetServer(23);
+WiFiClient telnetClient;
+WebServer server(80);
+GenericProtocol gp;
+
+typedef struct
+{
+  char ssid[25];
+  char pass[25];
+  char captive_ssid[25];
+  char captive_pass[25];
+  char modbusServer[25];
+  int sf;
+  int timeoutVal;
+  int timeoutsToReboot;
+} config_data_t;
+
+config_data_t configData={"TP-Link_32E6","34652398","CurrentRec",8,0,0};
+
+unsigned short lastPumpSpeed=0;
+unsigned short lastCL17Reading=0;
+
+char configMsg[4096];
+
+long watchdog;
+int timeoutcount=0;
+bool telnetClientObtained=false;
