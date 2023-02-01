@@ -63,18 +63,27 @@ static const char configFmt[] PROGMEM =R"(
   <body>
     <div style='font-size:250%%'>
       <form action="/set" method="GET">
-        SSID to join<br> <input type="text" name="ssid" style="font-size:40px" value="%s"></input><br>
-        Password for SSID to join<br> <input type="text" name="pass" style="font-size:40px" value="%s"></input><br>
-        SSID for Captive Net<br> <input type="text" name="captive_ssid" style="font-size:40px" value="%s"></input><br>
-        Password for Captive Net SSID<br> <input type="text" name="captive_pass" style="font-size:40px" value="%s"></input><br>
-        Spreading Factor (7-12)<br> <input type="text" name="sf" style="font-size:40px" value="%i"></input><br>
-        Timeout in seconds (0 for no timeout)<br> <input type="text" name="timeout_val" style="font-size:40px" value="%i"></input><br>
-        Number of timeouts before rebooting<br> (0 for no rebooting) <input type="text" name="tt_reboot" style="font-size:40px" value="%i"></input><br><br>
+        SSID to join <input type="text" name="ssid" style="font-size:40px" value="%s"></input><br>
+        Password for SSID to join <input type="text" name="pass" style="font-size:40px" value="%s"></input><br>
+        SSID for Captive Net <input type="text" name="captive_ssid" style="font-size:40px" value="%s"></input><br>
+        Password for Captive Net SSID <input type="text" name="captive_pass" style="font-size:40px" value="%s"></input><br>
+        Spreading Factor (7-12) <input type="text" name="sf" style="font-size:40px" value="%i"></input><br>
+        Timeout in seconds (0 for no timeout) <input type="text" name="timeout_val" style="font-size:40px" value="%i"></input><br>
+        Number of timeouts before rebooting (0 for no rebooting) <input type="text" name="tt_reboot" style="font-size:40px" value="%i"></input><br>
+        Monitor Mode <input type="checkbox" %s id="mmodeck" onchange="toggleMonMode();"><br>
+        <input type="text" value="%s" name="monmode" id="monmode" hidden>
         <input type="submit"></input><br>
       </form>
       <input type="button" onclick="location='/reboot';" value="Reboot"></input><br>
       <input type="button" onclick="location='/ota';" value="OTA"></input>
     </div>
+    <script>
+      function toggleMonMode()
+      {
+        var cb=document.getElementById("mmodeck");
+        document.getElementById("monmode").value=(cb.checked)?"true":"false";
+      }
+    </script>
   </body>
 </html>
 )";

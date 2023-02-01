@@ -25,9 +25,10 @@ typedef struct
   int sf;
   int timeoutVal;
   int timeoutsToReboot;
+  bool monitorMode;
 } config_data_t;
 
-config_data_t configData={"TP-Link_32E6","34652398","CurrentRec",8,0,0};
+config_data_t configData={"jenanderic","jenloveseric","CurrentRec",8,0,0,false};
 
 unsigned short lastPumpSpeed=0;
 unsigned short lastCL17Reading=0;

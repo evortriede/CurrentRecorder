@@ -21,7 +21,9 @@ void handleConfig()
          ,configData.captive_pass
          ,configData.sf
          ,configData.timeoutVal
-         ,configData.timeoutsToReboot);
+         ,configData.timeoutsToReboot
+         ,(configData.monitorMode)?"checked":""
+         ,(configData.monitorMode)?"true":"false");
   server.send(200, "text/html", configMsg);
 }
 
@@ -39,6 +41,7 @@ void handleSet()
   configData.sf=atoi(server.arg("sf").c_str());
   configData.timeoutVal=atoi(server.arg("timeout_val").c_str());
   configData.timeoutsToReboot=atoi(server.arg("tt_reboot").c_str());
+  configData.monitorMode=(0==strcmp("true",server.arg("monmode").c_str()));
 
   nvs_handle handle;
   esp_err_t res = nvs_open("lwc_data", NVS_READWRITE, &handle);
@@ -264,7 +267,12 @@ void translate(byte *data,int len)
   else if (data[0]=='C') //raw chlorine reading
   {
     lastCL17Reading=*ps;
-    sprintf(dataTranslated,"CL17 Chlorine reading (raw)%i\n",lastCL17Reading);
+    sprintf(dataTranslated,"CL17 Chlorine reading (raw) %i\n",lastCL17Reading);
+  }
+  else if (data[0]=='P') // pump setting
+  {
+    lastPumpSpeed=*ps;
+    sprintf(dataTranslated,"Pump speed %i\n",lastPumpSpeed);
   }
 }
 
@@ -340,7 +348,7 @@ void setup() {
   gp.setOnDisconnect(&disconnected);
   gp.setLogMethod(&logger);
   gp.setTimeout(2000);
-  //gp.setMonitorMode(true);
+  gp.setMonitorMode(configData.monitorMode); 
   gp.start();
 }
 
@@ -369,6 +377,7 @@ void loop()
       watchdog=millis();
       if (configData.timeoutsToReboot && (timeoutcount++ >= configData.timeoutsToReboot))
       {
+        Serial.println("rebooting too many timeouts");
         reboot();
       }
     }
@@ -385,6 +394,7 @@ void loop()
     }
     else if (telnetClientObtained && (WiFi.status() != WL_CONNECTED))
     {
+      Serial.println("Lost telnet connection ... rebooting");
       reboot();
     }
   }
