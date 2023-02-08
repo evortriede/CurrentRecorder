@@ -9,6 +9,7 @@
 #include <WebServer.h>
 #include <Update.h>
 #include <nvs.h>
+#include <ESPmDNS.h>
 
 WiFiServer telnetServer(23);
 WiFiClient telnetClient;

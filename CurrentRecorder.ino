@@ -340,6 +340,10 @@ void setup() {
   webServerSetup();
   
   Serial.println("back in setup after WiFi setup");
+
+  MDNS.begin("CurrentRecorder");
+  MDNS.addService("http", "tcp", 80);
+  
   watchdog=millis();
 
   gp.setSendMethod(&loraSend);
@@ -359,7 +363,6 @@ void loop()
 {
   buff[0]=0;
   byte *pb=buff;
-  
   if (telnetClient)
   {
     while (telnetClient.available())
