@@ -23,7 +23,8 @@ void handleConfig()
          ,configData.timeoutVal
          ,configData.timeoutsToReboot
          ,(configData.monitorMode)?"checked":""
-         ,(configData.monitorMode)?"true":"false");
+         ,(configData.monitorMode)?"true":"false"
+         ,configData.dnsName);
   server.send(200, "text/html", configMsg);
 }
 
@@ -42,6 +43,7 @@ void handleSet()
   configData.timeoutVal=atoi(server.arg("timeout_val").c_str());
   configData.timeoutsToReboot=atoi(server.arg("tt_reboot").c_str());
   configData.monitorMode=(0==strcmp("true",server.arg("monmode").c_str()));
+  strcpy(configData.dnsName,server.arg("dns_name").c_str());
 
   nvs_handle handle;
   esp_err_t res = nvs_open("lwc_data", NVS_READWRITE, &handle);
@@ -341,7 +343,7 @@ void setup() {
   
   Serial.println("back in setup after WiFi setup");
 
-  MDNS.begin("CurrentRecorder");
+  MDNS.begin(configData.dnsName);
   MDNS.addService("http", "tcp", 80);
   
   watchdog=millis();

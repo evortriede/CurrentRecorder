@@ -22,14 +22,14 @@ typedef struct
   char pass[25];
   char captive_ssid[25];
   char captive_pass[25];
-  char modbusServer[25];
   int sf;
   int timeoutVal;
   int timeoutsToReboot;
   bool monitorMode;
+  char dnsName[25];
 } config_data_t;
 
-config_data_t configData={"jenanderic","jenloveseric","CurrentRec",8,0,0,false};
+config_data_t configData={"jenanderic","jenloveseric","CurrentRec","",8,0,0,false,"CurrentRecorder"};
 
 unsigned short lastPumpSpeed=0;
 unsigned short lastCL17Reading=0;

@@ -71,6 +71,7 @@ static const char configFmt[] PROGMEM =R"(
         Timeout in seconds (0 for no timeout) <input type="text" name="timeout_val" style="font-size:40px" value="%i"></input><br>
         Number of timeouts before rebooting (0 for no rebooting) <input type="text" name="tt_reboot" style="font-size:40px" value="%i"></input><br>
         Monitor Mode <input type="checkbox" %s id="mmodeck" onchange="toggleMonMode();"><br>
+        DNS Name <input type="text" name="dns_name" style="font-size:40px" value="%s"></input><br>
         <input type="text" value="%s" name="monmode" id="monmode" hidden>
         <input type="submit"></input><br>
       </form>
