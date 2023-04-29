@@ -15,6 +15,8 @@ void handleConfig()
 {
   sprintf(configMsg
          ,configFmt
+         ,__DATE__
+         ,__TIME__
          ,configData.ssid
          ,configData.pass
          ,configData.captive_ssid
