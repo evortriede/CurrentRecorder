@@ -175,10 +175,11 @@ void displayIPs(int x, int y, boolean fSerialPrint)
   }
   sprintf(rgIPTxt,"%u.%u.%u.%u",myIP[0],myIP[1],myIP[2],myIP[3]);
   
-  Heltec.display->clear();
-  Heltec.display->drawStringMaxWidth(x, y, 128, rgIPTxt);
 
-  Heltec.display->display();
+  factory_display.clear();
+  factory_display.drawStringMaxWidth(x, y, 128, rgIPTxt);
+
+  factory_display.display();
 
   if (fSerialPrint)
   {
@@ -309,7 +310,7 @@ void setup() {
   Serial.begin(115200);
   Serial.println("in setup");
   
-  Heltec.begin(true /*DisplayEnable Enable*/, 
+  Heltec.begin(false /*DisplayEnable Enable*/, 
                true /*Heltec.LoRa Disable*/, 
                true /*Serial Enable*/, 
                true /*PABOOST Enable*/, 
@@ -322,13 +323,14 @@ void setup() {
     Serial.read();
   }
 
-  Heltec.display->flipScreenVertically();
-  Heltec.display->setFont(ArialMT_Plain_10);
-  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
-  Heltec.display->setLogBuffer(5, 64);
-  Heltec.display->clear();
-  Heltec.display->drawStringMaxWidth(0, 0, 128, "about to set up LoRa");
-  Heltec.display->display();
+  factory_display.init();
+  //factory_display.flipScreenVertically();
+  factory_display.setFont(ArialMT_Plain_10);
+  factory_display.setTextAlignment(TEXT_ALIGN_LEFT);
+  factory_display.setLogBuffer(5, 64);
+  factory_display.clear();
+  factory_display.drawStringMaxWidth(0, 0, 128, "about to set up LoRa");
+  factory_display.display();
   
 
   eepromSetup();
