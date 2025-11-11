@@ -46,3 +46,12 @@ bool telnetClientObtained=false;
 
 SSD1306Wire  factory_display(0x3c, 500000, SDA_OLED, SCL_OLED, GEOMETRY_128_64, RST_OLED); // addr , freq , i2c group , resolution , rst
 
+typedef struct 
+{
+  char ssid[25];
+  char pass[25];
+} saved_hotspot_t;
+
+#include <hotspots.h>
+
+

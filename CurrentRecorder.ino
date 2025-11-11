@@ -137,12 +137,47 @@ void webServerSetup()
   server.begin();
 }
 
-void wifiSTASetup(const char*ssid, const char*password)
+void *getLocalHotspot()
 {
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+   Serial.println("scan start");
+
+  // WiFi.scanNetworks will return the number of networks found
+  int n = WiFi.scanNetworks();
+  Serial.println("scan done");
+  if (n == 0) 
+  {
+      Serial.println("no networks found");
+  } else 
+  {
+    Serial.print(n);
+    Serial.println(" networks found");
+    for (int i = 0; i < n; ++i) 
+    {
+      String id = WiFi.SSID(i);
+      Serial.printf("looking for %s\n",id.c_str());
+      for (int j=0;j<sizeof(savedHotspots)/sizeof(savedHotspots[0]);j++)
+      {
+        Serial.printf("looking at %s\n",savedHotspots[j].ssid);
+        if (strcmp(savedHotspots[j].ssid,id.c_str())==0)
+        {
+          Serial.println("found");
+          return &savedHotspots[j];
+        }
+      }
+    }
+  }
+  return (void *)&configData.ssid[0];
+}
+
+void wifiSTASetup()
+{
+  saved_hotspot_t *hotspot = (saved_hotspot_t*)getLocalHotspot();
   
-  WiFi.begin(ssid, password);
+  Serial.print("Connecting to ");
+  Serial.println(hotspot->ssid);
+
+  WiFi.begin(hotspot->ssid, hotspot->pass);
+
   Serial.println("");
 
   long wifiTimeOut=millis()+30000l;
@@ -188,15 +223,25 @@ void displayIPs(int x, int y, boolean fSerialPrint)
   }
 }
 
+
+IPAddress myAddress(192, 168, 4, 4);
+IPAddress subNet(255, 255, 255, 0);
+
 void wifiAPSetup()
 {
-  WiFi.mode(WIFI_STA);
-  wifiSTASetup(configData.ssid,configData.pass);
+  Serial.println("Configuring access point...");
+  WiFi.mode(WIFI_AP_STA);
+  
+  wifiSTASetup();
+
+  Serial.printf("Setting up soft AP for %s\n",configData.captive_ssid);
+
+  WiFi.softAPConfig(myAddress, myAddress, subNet);
+  
+  WiFi.softAP(configData.captive_ssid,configData.captive_pass);
 
   displayIPs(0,0,true);
   
-  telnetServer.begin();
-  telnetClient=telnetServer.available();
 }
 
 void loraSend(byte *rgch,int len)
